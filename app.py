@@ -1,6 +1,12 @@
 import web
+import os
+import urllib
+import posixpath
 
-urls = ("/.*", "index")
+urls = (
+    '/(js|css|img)/(.*)', 'static',
+    '/.*', 'index',
+    )
 app = web.application(urls, globals())
 
 class index:
@@ -8,5 +14,14 @@ class index:
         render = web.template.render('templates/', base='layout')
         return render.index()
 
+class static:
+    def GET(self, media, file):
+        try:
+            f = open(media+'/'+file, 'r')
+            return f.read()
+        except:
+            return '' # you can send an 404 error here if you want
+
 if __name__ == "__main__":
-    app.run()
+        app.run()
+
